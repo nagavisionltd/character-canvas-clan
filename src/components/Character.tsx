@@ -23,16 +23,27 @@ const Character = ({ x, y, direction, isMoving }: CharacterProps) => {
 
   // Animate when moving
   useEffect(() => {
+    console.log('Animation effect triggered - isMoving:', isMoving);
+    
     if (!isMoving) {
+      console.log('Setting to idle frame');
       setCurrentFrame(0);
       return;
     }
 
+    console.log('Starting animation interval');
     const interval = setInterval(() => {
-      setCurrentFrame((prev) => (prev + 1) % walkFrames.length);
+      setCurrentFrame((prev) => {
+        const nextFrame = (prev + 1) % walkFrames.length;
+        console.log('Frame change:', prev, '->', nextFrame);
+        return nextFrame;
+      });
     }, 150); // 150ms per frame for smooth animation
 
-    return () => clearInterval(interval);
+    return () => {
+      console.log('Clearing animation interval');
+      clearInterval(interval);
+    };
   }, [isMoving, walkFrames.length]);
 
   const currentSprite = isMoving ? walkFrames[currentFrame] : idleFrame;
