@@ -18,7 +18,7 @@ const GameControls = () => {
         </div>
         
         <div>
-          <h4 className="font-semibold text-foreground mb-2">Combat (Coming Soon)</h4>
+          <h4 className="font-semibold text-foreground mb-2">Combat</h4>
           <div className="space-y-1 text-muted-foreground">
             <div>V - Punch</div>
             <div>C - Block</div>

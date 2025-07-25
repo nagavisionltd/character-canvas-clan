@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
+import { AttackType } from '@/hooks/useAttacks';
+import punchFrame1 from '@/assets/character-punch1.png';
+import punchFrame2 from '@/assets/character-punch2.png';
+import kickFrame from '@/assets/character-kick.png';
+import blockFrame from '@/assets/character-block.png';
 
 interface CharacterProps {
   x: number;
   y: number;
   direction: 'left' | 'right';
   isMoving: boolean;
+  currentAttack: AttackType;
+  isAttacking: boolean;
 }
 
-const Character = ({ x, y, direction, isMoving }: CharacterProps) => {
+const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: CharacterProps) => {
   const [currentFrame, setCurrentFrame] = useState(0);
 
   // Animation frames - using your uploaded sprite images
@@ -21,32 +28,43 @@ const Character = ({ x, y, direction, isMoving }: CharacterProps) => {
 
   const idleFrame = '/lovable-uploads/7b7544b6-5a36-4e9e-9417-918e97f69671.png';
 
+  // Attack frames
+  const attackFrames = {
+    punch: [punchFrame1],
+    combo: [punchFrame1, punchFrame2],
+    kick: [kickFrame],
+    block: [blockFrame],
+  };
+
   // Animate when moving
   useEffect(() => {
-    console.log('Animation effect triggered - isMoving:', isMoving);
-    
-    if (!isMoving) {
-      console.log('Setting to idle frame');
+    if (isAttacking || !isMoving) {
       setCurrentFrame(0);
       return;
     }
 
-    console.log('Starting animation interval');
     const interval = setInterval(() => {
-      setCurrentFrame((prev) => {
-        const nextFrame = (prev + 1) % walkFrames.length;
-        console.log('Frame change:', prev, '->', nextFrame);
-        return nextFrame;
-      });
-    }, 150); // 150ms per frame for smooth animation
+      setCurrentFrame((prev) => (prev + 1) % walkFrames.length);
+    }, 150);
 
-    return () => {
-      console.log('Clearing animation interval');
-      clearInterval(interval);
-    };
-  }, [isMoving, walkFrames.length]);
+    return () => clearInterval(interval);
+  }, [isMoving, isAttacking, walkFrames.length]);
 
-  const currentSprite = isMoving ? walkFrames[currentFrame] : idleFrame;
+  // Get current sprite based on state
+  const getCurrentSprite = () => {
+    if (isAttacking && currentAttack) {
+      const frames = attackFrames[currentAttack];
+      return frames[currentFrame % frames.length];
+    }
+    
+    if (isMoving) {
+      return walkFrames[currentFrame];
+    }
+    
+    return idleFrame;
+  };
+
+  const currentSprite = getCurrentSprite();
 
   return (
     <div

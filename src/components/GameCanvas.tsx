@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import Character from './Character';
+import { useAttacks } from '@/hooks/useAttacks';
 
 interface Position {
   x: number;
@@ -11,6 +12,7 @@ const GameCanvas = () => {
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isMoving, setIsMoving] = useState(false);
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
+  const { attackState, executeAttack } = useAttacks();
 
   // Game bounds
   const CANVAS_WIDTH = 800;
@@ -20,7 +22,8 @@ const GameCanvas = () => {
   // Handle continuous movement based on pressed keys
   useEffect(() => {
     const moveCharacter = () => {
-      if (pressedKeys.size === 0) {
+      // Don't move while attacking
+      if (attackState.isAttacking || pressedKeys.size === 0) {
         setIsMoving(false);
         return;
       }
@@ -52,16 +55,35 @@ const GameCanvas = () => {
 
     const gameLoop = setInterval(moveCharacter, 16); // ~60fps
     return () => clearInterval(gameLoop);
-  }, [pressedKeys, CHARACTER_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT]);
+  }, [pressedKeys, CHARACTER_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, attackState.isAttacking]);
 
   // Key event handlers
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const key = event.code;
+    
+    // Handle attack keys
+    if (key === 'KeyV') {
+      event.preventDefault();
+      executeAttack('punch');
+      return;
+    }
+    if (key === 'KeyC') {
+      event.preventDefault();
+      executeAttack('block');
+      return;
+    }
+    if (key === 'KeyB') {
+      event.preventDefault();
+      executeAttack('kick');
+      return;
+    }
+    
+    // Handle movement keys
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyW', 'KeyS', 'KeyD'].includes(key)) {
       event.preventDefault();
       setPressedKeys(prev => new Set(prev).add(key));
     }
-  }, []);
+  }, [executeAttack]);
 
   const handleKeyUp = useCallback((event: KeyboardEvent) => {
     const key = event.code;
@@ -106,6 +128,8 @@ const GameCanvas = () => {
         y={characterPosition.y}
         direction={direction}
         isMoving={isMoving}
+        currentAttack={attackState.currentAttack}
+        isAttacking={attackState.isAttacking}
       />
       
       {/* Game UI overlay */}
@@ -113,13 +137,15 @@ const GameCanvas = () => {
         <div className="text-lg font-bold text-neon-purple mb-2">STREET FIGHTER</div>
         <div className="text-sm space-y-1">
           <div>Position: ({Math.round(characterPosition.x)}, {Math.round(characterPosition.y)})</div>
-          <div>Status: {isMoving ? 'Moving' : 'Idle'}</div>
+          <div>Status: {attackState.isAttacking ? `Attacking (${attackState.currentAttack})` : isMoving ? 'Moving' : 'Idle'}</div>
+          {attackState.comboCount > 0 && <div>Combo: {attackState.comboCount}x</div>}
         </div>
       </div>
       
       {/* Controls help */}
       <div className="absolute bottom-4 right-4 text-foreground/60 text-xs">
         <div>Arrow Keys or WASD to move</div>
+        <div>V - Punch | C - Block | B - Kick</div>
       </div>
     </div>
   );
