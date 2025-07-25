@@ -15,7 +15,7 @@ const GameCanvas = () => {
   const { attackState, executeAttack } = useAttacks();
 
   // Game bounds
-  const CANVAS_WIDTH = 800;
+  const CANVAS_WIDTH = 1400;
   const CANVAS_HEIGHT = 400;
   const CHARACTER_SPEED = 4;
 
@@ -106,46 +106,60 @@ const GameCanvas = () => {
   }, [handleKeyDown, handleKeyUp]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-game-bg border border-grid-line rounded-lg">
-      {/* Grid background */}
-      <div 
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
-      />
-      
-      {/* Street/ground level indicator */}
-      <div className="absolute bottom-20 left-0 right-0 h-px bg-neon-purple/30" />
-      
-      {/* Character */}
-      <Character 
-        x={characterPosition.x}
-        y={characterPosition.y}
-        direction={direction}
-        isMoving={isMoving}
-        currentAttack={attackState.currentAttack}
-        isAttacking={attackState.isAttacking}
-      />
-      
-      {/* Game UI overlay */}
-      <div className="absolute top-4 left-4 text-foreground">
-        <div className="text-lg font-bold text-neon-purple mb-2">STREET FIGHTER</div>
-        <div className="text-sm space-y-1">
-          <div>Position: ({Math.round(characterPosition.x)}, {Math.round(characterPosition.y)})</div>
-          <div>Status: {attackState.isAttacking ? `Attacking (${attackState.currentAttack})` : isMoving ? 'Moving' : 'Idle'}</div>
-          {attackState.comboCount > 0 && <div>Combo: {attackState.comboCount}x</div>}
+    <div className="relative w-full h-full overflow-x-auto overflow-y-hidden border border-grid-line rounded-lg">
+      {/* Level container with extended width */}
+      <div className="relative min-w-[1400px] h-full">
+        {/* Cloud background */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url('/lovable-uploads/137b4840-b8c4-4775-bb50-3ad020551e83.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        
+        {/* Grid overlay */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }}
+        />
+        
+        {/* Street/ground level indicator */}
+        <div className="absolute bottom-20 left-0 right-0 h-px bg-neon-purple/30" />
+        
+        {/* Character */}
+        <Character 
+          x={characterPosition.x}
+          y={characterPosition.y}
+          direction={direction}
+          isMoving={isMoving}
+          currentAttack={attackState.currentAttack}
+          isAttacking={attackState.isAttacking}
+        />
+        
+        {/* Game UI overlay */}
+        <div className="absolute top-4 left-4 text-foreground">
+          <div className="text-lg font-bold text-neon-purple mb-2">STREET FIGHTER</div>
+          <div className="text-sm space-y-1">
+            <div>Position: ({Math.round(characterPosition.x)}, {Math.round(characterPosition.y)})</div>
+            <div>Status: {attackState.isAttacking ? `Attacking (${attackState.currentAttack})` : isMoving ? 'Moving' : 'Idle'}</div>
+            {attackState.comboCount > 0 && <div>Combo: {attackState.comboCount}x</div>}
+          </div>
         </div>
-      </div>
-      
-      {/* Controls help */}
-      <div className="absolute bottom-4 right-4 text-foreground/60 text-xs">
-        <div>Arrow Keys or WASD to move</div>
-        <div>V - Punch | C - Block | B - Kick</div>
+        
+        {/* Controls help */}
+        <div className="absolute bottom-4 right-4 text-foreground/60 text-xs">
+          <div>Arrow Keys or WASD to move</div>
+          <div>V - Punch | C - Block | B - Kick</div>
+        </div>
       </div>
     </div>
   );
