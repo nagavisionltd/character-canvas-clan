@@ -15,7 +15,7 @@ const GameCanvas = () => {
   const { attackState, executeAttack } = useAttacks();
 
   // Game bounds
-  const CANVAS_WIDTH = 1400;
+  const CANVAS_WIDTH = 4200;
   const CANVAS_HEIGHT = 400;
   const CHARACTER_SPEED = 4;
 
@@ -108,14 +108,14 @@ const GameCanvas = () => {
   return (
     <div className="relative w-full h-full overflow-x-auto overflow-y-hidden border border-grid-line rounded-lg">
       {/* Level container with extended width */}
-      <div className="relative min-w-[1400px] h-full">
+      <div className="relative min-w-[4200px] h-full">
         {/* Cloud background */}
         <div 
           className="absolute inset-0"
           style={{
             backgroundImage: `url('/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png')`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center bottom',
             backgroundRepeat: 'no-repeat'
           }}
         />
