@@ -113,7 +113,7 @@ const GameCanvas = () => {
         <div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('/lovable-uploads/137b4840-b8c4-4775-bb50-3ad020551e83.png')`,
+            backgroundImage: `url('/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
