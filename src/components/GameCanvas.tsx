@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Character from './Character';
 import { useAttacks } from '@/hooks/useAttacks';
 
@@ -13,6 +13,7 @@ const GameCanvas = () => {
   const [isMoving, setIsMoving] = useState(false);
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const { attackState, executeAttack } = useAttacks();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Game bounds
   const CANVAS_WIDTH = 4200;
@@ -105,8 +106,20 @@ const GameCanvas = () => {
     };
   }, [handleKeyDown, handleKeyUp]);
 
+  // Camera follow: center player horizontally within bounds
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const containerWidth = container.clientWidth;
+    const maxScroll = Math.max(0, CANVAS_WIDTH - containerWidth);
+    const target = Math.min(Math.max(characterPosition.x - containerWidth / 2, 0), maxScroll);
+
+    container.scrollLeft = target;
+  }, [characterPosition.x, CANVAS_WIDTH]);
+
   return (
-    <div className="relative w-full h-full overflow-x-auto overflow-y-hidden border border-grid-line rounded-lg">
+    <div ref={scrollRef} className="relative w-full h-full overflow-x-auto overflow-y-hidden border border-grid-line rounded-lg">
       {/* Level container with extended width */}
       <div className="relative min-w-[4200px] h-full">
         {/* Cloud background */}
