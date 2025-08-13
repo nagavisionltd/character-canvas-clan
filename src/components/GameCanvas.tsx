@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Character from './Character';
 import { useAttacks } from '@/hooks/useAttacks';
+import streetBackground from '@/assets/street-background.png';
 
 interface Position {
   x: number;
@@ -126,7 +127,7 @@ const GameCanvas = () => {
         <div 
           className="absolute inset-0"
           style={{
-            backgroundImage: `url('/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png')`,
+            backgroundImage: `url(${streetBackground})`,
             backgroundSize: '70%',
             backgroundPosition: 'center bottom',
             backgroundRepeat: 'repeat-x'

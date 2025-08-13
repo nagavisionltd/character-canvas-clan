@@ -43,8 +43,13 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
       return;
     }
 
+    console.log('Starting walk animation, isMoving:', isMoving);
     const interval = setInterval(() => {
-      setCurrentFrame((prev) => (prev + 1) % walkFrames.length);
+      setCurrentFrame((prev) => {
+        const newFrame = (prev + 1) % walkFrames.length;
+        console.log('Walk frame changed to:', newFrame, 'sprite:', walkFrames[newFrame]);
+        return newFrame;
+      });
     }, 150);
 
     return () => clearInterval(interval);
@@ -68,7 +73,7 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
 
   return (
     <div
-      className="absolute transition-all duration-75 ease-linear"
+      className="absolute"
       style={{
         left: `${x}px`,
         top: `${y}px`,
