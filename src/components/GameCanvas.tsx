@@ -127,9 +127,9 @@ const GameCanvas = () => {
           className="absolute inset-0"
           style={{
             backgroundImage: `url('/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png')`,
-            backgroundSize: 'cover',
+            backgroundSize: '70%',
             backgroundPosition: 'center bottom',
-            backgroundRepeat: 'no-repeat'
+            backgroundRepeat: 'repeat-x'
           }}
         />
         

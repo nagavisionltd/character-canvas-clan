@@ -19,14 +19,14 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
 
   // Animation frames - using your uploaded sprite images
   const walkFrames = [
-    '/lovable-uploads/7b7544b6-5a36-4e9e-9417-918e97f69671.png',
+    '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png',
     '/lovable-uploads/4d63555e-7a6c-4b1b-be65-b69d71096eec.png',
     '/lovable-uploads/74cf85b2-3a9a-47cd-9279-6ef7e09c6396.png',
     '/lovable-uploads/e34a2b9b-9db4-42ff-a0e0-fb8226c9c80e.png',
-    '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png'
+    '/lovable-uploads/137b4840-b8c4-4775-bb50-3ad020551e83.png'
   ];
 
-  const idleFrame = '/lovable-uploads/7b7544b6-5a36-4e9e-9417-918e97f69671.png';
+  const idleFrame = '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png';
 
   // Attack frames
   const attackFrames = {
