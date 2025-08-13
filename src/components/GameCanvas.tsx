@@ -128,7 +128,7 @@ const GameCanvas = () => {
           className="absolute inset-0"
           style={{
             backgroundImage: `url(${streetBackground})`,
-            backgroundSize: '70%',
+            backgroundSize: '80%',
             backgroundPosition: 'center bottom',
             backgroundRepeat: 'repeat-x'
           }}

@@ -43,13 +43,8 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
       return;
     }
 
-    console.log('Starting walk animation, isMoving:', isMoving);
     const interval = setInterval(() => {
-      setCurrentFrame((prev) => {
-        const newFrame = (prev + 1) % walkFrames.length;
-        console.log('Walk frame changed to:', newFrame, 'sprite:', walkFrames[newFrame]);
-        return newFrame;
-      });
+      setCurrentFrame((prev) => (prev + 1) % walkFrames.length);
     }, 150);
 
     return () => clearInterval(interval);
@@ -82,10 +77,11 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
       }}
     >
       <img 
-        src={currentSprite} 
+        src={`${currentSprite}?v=${Date.now()}`}
         alt="Character" 
         className="w-16 h-20 object-contain"
         style={{ imageRendering: 'pixelated' }}
+        key={currentSprite}
       />
       
       {/* Character shadow */}
