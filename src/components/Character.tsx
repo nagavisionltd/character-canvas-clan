@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 import { AttackType } from '@/hooks/useAttacks';
-import punchFrame1 from '@/assets/character-punch1.png';
-import punchFrame2 from '@/assets/character-punch2.png';
-import kickFrame from '@/assets/character-kick.png';
-import blockFrame from '@/assets/character-block.png';
 
 interface CharacterProps {
   x: number;
@@ -16,6 +12,7 @@ interface CharacterProps {
 
 const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: CharacterProps) => {
   const [currentFrame, setCurrentFrame] = useState(0);
+  const [attackFrame, setAttackFrame] = useState(0);
 
   // Animation frames - using your uploaded sprite images
   const walkFrames = [
@@ -29,12 +26,48 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
 
   // Attack frames
   const attackFrames = {
-    punch: [punchFrame1],
-    combo: [punchFrame1, punchFrame2],
-    kick: [kickFrame],
-    block: [blockFrame],
+    punch: [
+      '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png', // idle
+      '/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png', // punch extend
+      '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png'  // return to idle
+    ],
+    combo: [
+      '/lovable-uploads/2e559b61-ed53-4594-aa1e-82335f605dbb.png', // quick punch
+      '/lovable-uploads/7b7544b6-5a36-4e9e-9417-918e97f69671.png', // second punch
+      '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png'  // return
+    ],
+    kick: [
+      '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png',
+      '/lovable-uploads/137b4840-b8c4-4775-bb50-3ad020551e83.png',
+      '/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png'
+    ],
+    block: ['/lovable-uploads/05da500a-35d0-4918-ab92-f3741edeb9e2.png'],
   };
 
+  // Attack animation logic
+  useEffect(() => {
+    if (!isAttacking || !currentAttack) {
+      setAttackFrame(0);
+      return;
+    }
+
+    const frames = attackFrames[currentAttack];
+    if (frames.length <= 1) return;
+
+    let frameIndex = 0;
+    const frameInterval = currentAttack === 'combo' ? 80 : 100; // Faster combo animation
+
+    const animateAttack = () => {
+      setAttackFrame(frameIndex);
+      frameIndex++;
+      
+      if (frameIndex < frames.length) {
+        setTimeout(animateAttack, frameInterval);
+      }
+    };
+
+    animateAttack();
+  }, [isAttacking, currentAttack]);
   // Animate when moving
   useEffect(() => {
     if (isAttacking || !isMoving) {
@@ -53,7 +86,7 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
   const getCurrentSprite = () => {
     if (isAttacking && currentAttack) {
       const frames = attackFrames[currentAttack];
-      return frames[currentFrame % frames.length];
+      return frames[Math.min(attackFrame, frames.length - 1)];
     }
     
     if (isMoving) {
@@ -78,10 +111,21 @@ const Character = ({ x, y, direction, isMoving, currentAttack, isAttacking }: Ch
       <img 
         src={`${currentSprite}?v=${Date.now()}`}
         alt="Character" 
-        className="w-16 h-20 object-contain"
+        className={`w-16 h-20 object-contain transition-transform duration-75 ${
+          isAttacking && currentAttack === 'punch' ? 'scale-110' : ''
+        }`}
         style={{ imageRendering: 'pixelated' }}
         key={currentSprite}
       />
+      
+      {/* Attack effect */}
+      {isAttacking && (currentAttack === 'punch' || currentAttack === 'combo') && (
+        <div 
+          className={`absolute top-1/2 ${direction === 'right' ? 'left-12' : 'right-12'} 
+                     w-8 h-8 bg-neon-purple/50 rounded-full animate-ping`}
+          style={{ transform: 'translateY(-50%)' }}
+        />
+      )}
       
       {/* Character shadow */}
       <div 
